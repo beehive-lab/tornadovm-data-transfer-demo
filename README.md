@@ -12,6 +12,11 @@ This project demonstrates data transfer patterns using TornadoVM:
 - Java 21+
 - GPU backend (OpenCL / PTX / SPIR-V)
 
+```bash
+sdk use java 21.0.9-tem
+sdk use tornadovm 2.2.0-opencl
+```
+
 ## Build & Run
 The main class requires an integer to define which scenarios to run.
 Passing `1234` is treated as a special value and triggers execution of all four scenarios.
