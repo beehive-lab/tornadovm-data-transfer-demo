@@ -1,0 +1,73 @@
+/*
+ * Copyright 2026, APT Group, Department of Computer Science,
+ * The University of Manchester.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package demo.scenarios;
+
+import demo.kernels.SaxpyKernel;
+import demo.utils.DataGenerator;
+import demo.utils.Timer;
+import demo.utils.Validator;
+import uk.ac.manchester.tornado.api.DataRange;
+import uk.ac.manchester.tornado.api.TaskGraph;
+import uk.ac.manchester.tornado.api.TornadoExecutionPlan;
+import uk.ac.manchester.tornado.api.TornadoExecutionResult;
+import uk.ac.manchester.tornado.api.enums.DataTransferMode;
+import uk.ac.manchester.tornado.api.exceptions.TornadoExecutionPlanException;
+import uk.ac.manchester.tornado.api.types.arrays.FloatArray;
+
+public class Scenario3_FitsInGPU_UnderDemand_DataRange {
+
+    public static void run(int size) throws TornadoExecutionPlanException {
+        int iterations = 2;
+
+        FloatArray x = DataGenerator.randomFloatArray(size);
+        FloatArray xJava = FloatArray.fromArray(x.toHeapArray());
+        FloatArray y = DataGenerator.randomFloatArray(size);
+        FloatArray yJava = FloatArray.fromArray(y.toHeapArray());
+        float alpha = 2.0f;
+
+        TaskGraph tg = new TaskGraph("saxpy-s3")
+                .transferToDevice(DataTransferMode.FIRST_EXECUTION, x, y)
+                .task("saxpy", SaxpyKernel::saxpy, x, y, alpha)
+                .transferToHost(DataTransferMode.UNDER_DEMAND, y);
+
+        try (TornadoExecutionPlan executionPlan = new TornadoExecutionPlan(tg.snapshot())) {
+            Timer t = new Timer();
+            t.start();
+            TornadoExecutionResult result = null;
+            for (int i = 0; i < iterations; i++) {
+                result = executionPlan.execute();
+            }
+            double ms = t.stopMillis();
+
+            t.start();
+            DataRange dataRange = new DataRange(y);
+            int rangeSize = size/4;
+            int rangeOffset = 0;
+            result.transferToHost(dataRange.withSize(rangeSize).withOffset(rangeOffset));
+            double transferMs = t.stopMillis();
+
+            // Run the same computation in Java
+            for (int i = 0; i < iterations; i++) {
+                SaxpyKernel.saxpy(xJava, yJava, alpha);
+            }
+
+            // Validate results
+            boolean status = Validator.saxpyWithDataRange(yJava, y, rangeOffset, rangeSize);
+            System.out.printf("[Scenario 3 - Transfer output (size/4) under demand with data range %d (last execution)] Size=%d, Iterations=%d, Total=%.2f ms, Validation=%s%n", rangeSize, size, iterations, ms + transferMs, Validator.isValid(status));
+        }
+    }
+}
