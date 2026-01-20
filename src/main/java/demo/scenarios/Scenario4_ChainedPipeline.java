@@ -41,7 +41,7 @@ public class Scenario4_ChainedPipeline {
         float alpha = 2.0f;
 
         TaskGraph tg = new TaskGraph("saxpy-s4")
-                .transferToDevice(DataTransferMode.EVERY_EXECUTION, x, y)
+                .transferToDevice(DataTransferMode.FIRST_EXECUTION, x, y)
                 // Task 1: SAXPY
                 .task("saxpy", SaxpyKernel::saxpy, x, y, alpha)
                 // Task 2: Max computation (consumes SAXPY output)

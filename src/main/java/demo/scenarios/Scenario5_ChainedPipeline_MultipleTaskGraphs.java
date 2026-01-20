@@ -41,7 +41,7 @@ public class Scenario5_ChainedPipeline_MultipleTaskGraphs {
         float alpha = 2.0f;
 
         TaskGraph tg1 = new TaskGraph("saxpy-s5.0")
-                .transferToDevice(DataTransferMode.EVERY_EXECUTION, x, y)
+                .transferToDevice(DataTransferMode.FIRST_EXECUTION, x, y)
                 // Task 1: SAXPY
                 .task("saxpy", SaxpyKernel::saxpy, x, y, alpha)
                 .persistOnDevice(y);
