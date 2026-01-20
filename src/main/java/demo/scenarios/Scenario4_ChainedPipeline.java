@@ -63,7 +63,7 @@ public class Scenario4_ChainedPipeline {
             // Validate results
             boolean status = Validator.saxpy(yJava, y);
             status &= Validator.maxReduce(maxResultJava, maxResult);
-            System.out.printf("[Scenario 4] Size=%d, Max=%.4f, Total=%.2f ms, Validation=%s%n", size, maxResult[0], totalMs, Validator.isValid(status));
+            System.out.printf("[Scenario 4 - Chained Tasks in Single TaskGraph] Size=%d, Max=%.4f, Total=%.2f ms, Validation=%s%n", size, maxResult[0], totalMs, Validator.isValid(status));
         }
     }
 }

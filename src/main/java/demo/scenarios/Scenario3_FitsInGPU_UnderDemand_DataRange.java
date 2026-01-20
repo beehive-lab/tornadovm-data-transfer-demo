@@ -31,7 +31,7 @@ import uk.ac.manchester.tornado.api.types.arrays.FloatArray;
 public class Scenario3_FitsInGPU_UnderDemand_DataRange {
 
     public static void run(int size) throws TornadoExecutionPlanException {
-        int iterations = 2;
+        int iterations = 100;
 
         FloatArray x = DataGenerator.randomFloatArray(size);
         FloatArray xJava = FloatArray.fromArray(x.toHeapArray());
