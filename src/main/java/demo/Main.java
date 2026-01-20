@@ -20,6 +20,7 @@ import demo.scenarios.Scenario1_FitsInGPU;
 import demo.scenarios.Scenario2_FitsInGPU_UnderDemand;
 import demo.scenarios.Scenario3_FitsInGPU_UnderDemand_DataRange;
 import demo.scenarios.Scenario4_ChainedPipeline;
+import demo.scenarios.Scenario5_ChainedPipeline_MultipleTaskGraphs;
 import uk.ac.manchester.tornado.api.exceptions.TornadoExecutionPlanException;
 
 public class Main {
@@ -35,7 +36,8 @@ public class Main {
             case 1 -> Scenario1_FitsInGPU.run(small);                       // with full transfer
             case 2 -> Scenario2_FitsInGPU_UnderDemand.run(small);           // with UNDER_DEMAND transfer
             case 3 -> Scenario3_FitsInGPU_UnderDemand_DataRange.run(small); // with UNDER_DEMAND transfer & Data Range
-            case 4 -> Scenario4_ChainedPipeline.run(large);                 // Chained TaskGraph
+            case 4 -> Scenario4_ChainedPipeline.run(large);                     // Chained Tasks in single TaskGraph
+            case 5 -> Scenario5_ChainedPipeline_MultipleTaskGraphs.run(large);  // Chained Tasks in multiple TaskGraphs
             case 12 -> {
                 Scenario1_FitsInGPU.run(small);                             // with full transfer
                 Scenario2_FitsInGPU_UnderDemand.run(small);                 // with UNDER_DEMAND transfer
@@ -43,6 +45,10 @@ public class Main {
             case 23 -> {
                 Scenario2_FitsInGPU_UnderDemand.run(small);                 // with UNDER_DEMAND transfer
                 Scenario3_FitsInGPU_UnderDemand_DataRange.run(small);       // with UNDER_DEMAND transfer & Data Range
+            }
+            case 45 -> {
+                Scenario4_ChainedPipeline.run(large);                       // Chained Tasks in single TaskGraph
+                Scenario5_ChainedPipeline_MultipleTaskGraphs.run(large);    // Chained Tasks in multiple TaskGraphs
             }
             case 123 -> {
                 Scenario1_FitsInGPU.run(small);                             // with full transfer
@@ -52,7 +58,13 @@ public class Main {
                 Scenario1_FitsInGPU.run(small);                             // with full transfer
                 Scenario2_FitsInGPU_UnderDemand.run(small);                 // with UNDER_DEMAND transfer
                 Scenario3_FitsInGPU_UnderDemand_DataRange.run(small);       // with UNDER_DEMAND transfer & Data Range
-                Scenario4_ChainedPipeline.run(large);                       // Chained TaskGraph
+                Scenario4_ChainedPipeline.run(large);                       // Chained Tasks in single TaskGraph
+            } case 12345 -> {
+                Scenario1_FitsInGPU.run(small);                             // with full transfer
+                Scenario2_FitsInGPU_UnderDemand.run(small);                 // with UNDER_DEMAND transfer
+                Scenario3_FitsInGPU_UnderDemand_DataRange.run(small);       // with UNDER_DEMAND transfer & Data Range
+                Scenario4_ChainedPipeline.run(large);                       // Chained Tasks in single TaskGraph
+                Scenario5_ChainedPipeline_MultipleTaskGraphs.run(large);    // Chained Tasks in multiple TaskGraphs
             }
         }
     }

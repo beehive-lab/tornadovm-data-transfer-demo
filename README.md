@@ -5,7 +5,8 @@ This project demonstrates data transfer patterns using TornadoVM:
 1. FIRST_EXECUTION vs EVERY_EXECUTION (for input data)
 2. EVERY_EXECUTION vs UNDER_DEMAND (for output data)
 3. UNDER_DEMAND (for a partial output using DataRange)
-4. Chain multiple tasks to return the final result
+4. Chain multiple tasks in a single TaskGraph to return the final result
+5. Chain multiple tasks in multiple TaskGraphs to return the final result
 
 ## Requirements
 - TornadoVM installed and sourced
@@ -29,13 +30,13 @@ mvn clean package
 
 To run all scenarios:
 ```bash
-tornado --jvm="-Xmx24g" -cp target/tornadovm-data-transfer-demo-1.0-SNAPSHOT.jar demo.Main 1234 
+tornado --jvm="-Xmx24g" -cp target/tornadovm-data-transfer-demo-1.0-SNAPSHOT.jar demo.Main 12345 
 ```
 
 or 
 
 ```bash
-java @$TORNADOVM_HOME/tornado-argfile -Xmx24g -cp target/tornadovm-data-transfer-demo-1.0-SNAPSHOT.jar demo.Main 1234
+java @$TORNADOVM_HOME/tornado-argfile -Xmx24g -cp target/tornadovm-data-transfer-demo-1.0-SNAPSHOT.jar demo.Main 12345
 ```
 
 
